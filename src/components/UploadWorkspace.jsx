@@ -22,7 +22,7 @@ function UploadWorkspace({
       const userId = localStorage.getItem("user_id");
 
       const res = await axios.get(
-        `http://192.168.31.196:8000/palm/user/${userId}`
+        `https://futuredekho-server.onrender.com/palm/user/${userId}`
       );
 
       setPalms(res.data.palms);
@@ -37,7 +37,7 @@ function UploadWorkspace({
     const userId = localStorage.getItem("user_id");
 
     const res = await axios.get(
-      `http://192.168.31.196:8000/chat/user/${userId}`
+      `https://futuredekho-server.onrender.com/chat/user/${userId}`
     );
 
     setConversations(
@@ -62,7 +62,7 @@ function UploadWorkspace({
       formData.append("image", selectedFile);
 
       const res = await axios.post(
-        `http://192.168.31.196:8000/palm/analyze?user_id=${userId}`,
+        `https://futuredekho-server.onrender.com/palm/analyze?user_id=${userId}`,
         formData,
         {
           headers: {

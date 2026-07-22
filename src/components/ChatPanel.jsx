@@ -55,7 +55,7 @@ function ChatPanel({ selectedPalm,
   const loadConversation = async () => {
   try {
     const res = await axios.get(
-      `http://192.168.31.196:8000/chat/${selectedConversation.id}`
+      `https://futuredekho-server.onrender.com/chat/${selectedConversation.id}`
     );
 
     setMessages(res.data.messages);
