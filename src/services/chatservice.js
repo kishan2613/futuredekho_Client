@@ -1,10 +1,17 @@
 import api from "./backendapis";
 
-export const sendMessage = async (message) => {
+export const sendMessage = async (
+  conversationId,
+  message,
+  palmId = null
+) => {
+
   const response = await api.post(
     "/chat",
     {
-      message
+      conversation_id: conversationId,
+      message: message,
+      palm_id: palmId
     }
   );
 
