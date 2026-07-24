@@ -1,99 +1,70 @@
 import { useState, useEffect, useRef } from "react";
-import { SendHorizontal } from "lucide-react";
-
+import { Hand, Paperclip, SendHorizontal, X } from "lucide-react";
 import { sendMessage } from "../services/chatservice";
 import { createConversation } from "../services/conversationService";
 import ReactMarkdown from "react-markdown";
 import axios from "axios";
 
-function ChatPanel({ selectedPalm,
-  setSelectedPalm,selectedConversation }) {
+function ChatPanel({ selectedPalm, setSelectedPalm, selectedConversation }) {
   const [message, setMessage] = useState("");
   const [conversationId, setConversationId] = useState(null);
   const [messages, setMessages] = useState([]);
-
+  const [sending, setSending] = useState(false);
+  const [userName] = useState(
+    () => localStorage.getItem("user_name") || ""
+  );
   const messagesEndRef = useRef(null);
 
   useEffect(() => {
     const initConversation = async () => {
       try {
         const userId = localStorage.getItem("user_id");
-
+        if (!userId) return;
         const res = await createConversation(userId);
-
         setConversationId(res.conversation_id);
-
-        console.log(
-          "Conversation Created:",
-          res.conversation_id
-        );
       } catch (error) {
-        console.error(
-          "Conversation Error:",
-          error
-        );
+        console.error("Conversation Error:", error);
       }
     };
-
     initConversation();
   }, []);
 
   useEffect(() => {
-  if (!selectedConversation) return;
+    if (!selectedConversation) return;
+    loadConversation();
+  }, [selectedConversation]);
 
-  loadConversation();
-}, [selectedConversation]);
-
-  // Auto scroll
   useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({
-      behavior: "smooth",
-    });
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
-
   const loadConversation = async () => {
-  try {
-    const res = await axios.get(
-      `https://futuredekho-server.onrender.com/chat/${selectedConversation.id}`
-    );
-
-    setMessages(res.data.messages);
-
-    setConversationId(
-      selectedConversation.id
-    );
-
-  } catch (error) {
-    console.error(error);
-  }
-};
-
+    try {
+      const res = await axios.get(
+        `https://futuredekho-server.onrender.com/chat/${selectedConversation.id}`
+      );
+      setMessages(res.data.messages || []);
+      setConversationId(selectedConversation.id);
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   const handleSend = async () => {
-    if (!message.trim()) return;
-
+    if (!message.trim() || sending) return;
     if (!conversationId) {
       alert("Conversation not ready");
       return;
     }
 
     const currentMessage = message;
-
     setMessage("");
+    setSending(true);
 
-    // Add user message + loading bubble
     setMessages((prev) => [
       ...prev,
-      {
-        role: "user",
-        content: currentMessage,
-      },
-      {
-        id: "loading",
-        role: "assistant",
-        loading: true,
-      },
+      { role: "user", content: currentMessage },
+      { id: "loading", role: "assistant", loading: true },
     ]);
 
     try {
@@ -102,214 +73,159 @@ function ChatPanel({ selectedPalm,
         currentMessage,
         selectedPalm?.id || null
       );
-
       setMessages((prev) =>
         prev.map((msg) =>
           msg.id === "loading"
-            ? {
-                role: "assistant",
-                content: res.reply,
-              }
+            ? { role: "assistant", content: res.reply }
             : msg
         )
       );
     } catch (error) {
       console.error(error);
-
       setMessages((prev) =>
         prev.map((msg) =>
           msg.id === "loading"
             ? {
                 role: "assistant",
-                content: "Something went wrong.",
+                content: "Something went wrong. Please try again.",
               }
             : msg
         )
       );
+    } finally {
+      setSending(false);
     }
   };
 
   return (
-    <div className="flex-1 h-full bg-white rounded-2xl border border-gray-200 flex flex-col overflow-hidden">
-
-      {/* Header */}
-      <div className="p-5 border-b">
-        <h2 className="font-semibold">
-          AI Palm Reader
-        </h2>
+    <div className="flex-1 w-full h-full min-h-0 bg-white/90 backdrop-blur-xl rounded-2xl sm:rounded-3xl border border-gold/15 shadow-[0_20px_60px_-28px_rgba(10,15,28,0.35)] flex flex-col overflow-hidden">
+      <div className="px-3 sm:px-5 py-3 sm:py-4 border-b border-ink/5 flex items-center justify-between gap-3 bg-gradient-to-r from-ivory to-white">
+        <div className="min-w-0">
+          <h2 className="font-display text-base sm:text-lg font-semibold text-ink truncate">
+            {userName ? `Welcome, ${userName}` : "AI Palm Reader"}
+          </h2>
+          <p className="text-[11px] sm:text-xs text-muted mt-0.5 font-light truncate">
+            Ask anything about your palm or stars
+          </p>
+        </div>
+        <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-blush flex items-center justify-center text-gold-deep border border-gold/20 shrink-0">
+          <Hand size={18} />
+        </div>
       </div>
 
-      {/* Attached Palm */}
       {selectedPalm && (
-  <div className="px-4 py-3 border-b bg-purple-50">
+        <div className="px-3 sm:px-4 py-2.5 sm:py-3 border-b border-gold/15 bg-blush/70 flex items-center justify-between gap-3">
+          <div className="flex items-center gap-2.5 min-w-0">
+            <Paperclip size={15} className="text-gold-deep shrink-0" />
+            <span className="text-sm font-medium text-ink truncate">
+              Palm #{selectedPalm.id} attached
+            </span>
+          </div>
+          <button
+            type="button"
+            onClick={() => setSelectedPalm(null)}
+            className="text-muted hover:text-gold-deep transition p-1 shrink-0"
+            aria-label="Remove attached palm"
+          >
+            <X size={16} />
+          </button>
+        </div>
+      )}
 
-    <div className="flex items-center justify-between">
-
-      <div className="flex items-center gap-2">
-
-        <span className="text-lg">
-          📎
-        </span>
-
-        <span className="text-sm font-medium text-purple-700">
-          Palm #{selectedPalm.id} Attached
-        </span>
-
-      </div>
-
-      <button
-        onClick={() => setSelectedPalm(null)}
-        className="text-red-500 hover:text-red-700 text-sm font-medium"
-      >
-        ✕ Remove
-      </button>
-
-    </div>
-
-  </div>
-)}
-
-      {/* Chat Area */}
-      <div className="flex-1 min-h-0 overflow-y-auto p-4">
-
+      <div className="flex-1 min-h-0 overflow-y-auto p-3 sm:p-4 md:p-5">
         {messages.length === 0 && (
-          <div className="flex flex-col items-center justify-center h-full">
-
-            <div className="w-20 h-20 rounded-full bg-purple-100 flex items-center justify-center text-3xl">
-              🖐
+          <div className="flex flex-col items-center justify-center h-full text-center px-3 animate-fade-in">
+            <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-blush flex items-center justify-center text-gold-deep mb-4 sm:mb-5 border border-gold/20">
+              <Hand size={26} />
             </div>
-
-            <h3 className="mt-5 text-lg font-semibold">
-              Welcome to HathDekho
+            <h3 className="font-display text-xl sm:text-2xl font-semibold text-ink break-words px-2">
+              {userName ? (
+                <>
+                  Welcome,{" "}
+                  <span className="italic text-gold-strong">{userName}</span>
+                </>
+              ) : (
+                <>
+                  Welcome to{" "}
+                  <span className="italic text-gold-strong">HathDekho</span>
+                </>
+              )}
             </h3>
-
-            <p className="text-center text-sm text-gray-500 mt-2 max-w-xs">
+            <p className="mt-3 text-sm text-muted max-w-xs leading-relaxed font-light">
               {selectedPalm
-                ? `Palm #${selectedPalm.id} is attached. Ask questions about this palm.`
-                : "Select a palm from the left panel and start chatting."}
+                ? `Palm #${selectedPalm.id} is attached. Ask questions about this reading.`
+                : "Select a palm, then start chatting."}
             </p>
-
           </div>
         )}
 
         {messages.map((msg, index) => (
-
-  <div key={index} className="mb-6">
-
-    {msg.role === "user" ? (
-
-      <div className="flex justify-end">
-
-        <div className="max-w-[75%] bg-purple-600 text-white px-4 py-3 rounded-2xl">
-          {msg.content}
-        </div>
-
-      </div>
-
-    ) : (
-
-      <div className="w-full">
-
-        {/* Assistant Header */}
-
-        <div className="flex items-center gap-3 mb-3">
-
-          <div className="w-8 h-8 rounded-full bg-purple-100 flex items-center justify-center">
-            🖐
+          <div key={index} className="mb-4 sm:mb-5">
+            {msg.role === "user" ? (
+              <div className="flex justify-end">
+                <div className="max-w-[88%] sm:max-w-[80%] bg-night text-white px-3.5 sm:px-4 py-2.5 sm:py-3 rounded-2xl rounded-br-md text-sm sm:text-[15px] leading-relaxed break-words">
+                  {msg.content}
+                </div>
+              </div>
+            ) : (
+              <div className="w-full">
+                <div className="flex items-center gap-2.5 mb-2">
+                  <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-blush flex items-center justify-center text-gold-deep border border-gold/15 shrink-0">
+                    <Hand size={14} />
+                  </div>
+                  <span className="font-brand text-[10px] sm:text-xs tracking-[0.15em] text-ink">
+                    HathDekho
+                  </span>
+                </div>
+                <div className="pl-0 sm:pl-10 text-sm sm:text-[15px] leading-7 text-ink/85 break-words">
+                  {msg.loading ? (
+                    <div className="flex gap-1.5 items-center py-1 pl-9 sm:pl-0">
+                      <span className="w-2 h-2 rounded-full bg-gold dot-bounce" />
+                      <span
+                        className="w-2 h-2 rounded-full bg-gold dot-bounce"
+                        style={{ animationDelay: "0.15s" }}
+                      />
+                      <span
+                        className="w-2 h-2 rounded-full bg-gold dot-bounce"
+                        style={{ animationDelay: "0.3s" }}
+                      />
+                    </div>
+                  ) : (
+                    <div className="prose prose-sm max-w-none prose-headings:font-display prose-a:text-gold-deep">
+                      <ReactMarkdown>{msg.content}</ReactMarkdown>
+                    </div>
+                  )}
+                </div>
+              </div>
+            )}
           </div>
-
-          <span className="font-semibold">
-            HathDekho
-          </span>
-
-        </div>
-
-        {/* Assistant Content */}
-
-        <div className="pl-11 text-[15px] leading-7 text-gray-800">
-
-          {msg.loading ? (
-
-            <div className="flex gap-1 items-center">
-
-              <span className="w-2 h-2 bg-gray-500 rounded-full animate-bounce"></span>
-
-              <span
-                className="w-2 h-2 bg-gray-500 rounded-full animate-bounce"
-                style={{
-                  animationDelay: "0.15s",
-                }}
-              ></span>
-
-              <span
-                className="w-2 h-2 bg-gray-500 rounded-full animate-bounce"
-                style={{
-                  animationDelay: "0.3s",
-                }}
-              ></span>
-
-            </div>
-
-          ) : (
-
-            <div className="prose prose-sm max-w-none">
-
-              <ReactMarkdown>
-                {msg.content}
-              </ReactMarkdown>
-
-            </div>
-
-          )}
-
-        </div>
-
-      </div>
-
-    )}
-
-  </div>
-
-))}
-
+        ))}
         <div ref={messagesEndRef} />
-
       </div>
 
-      {/* Input */}
-      <div className="border-t p-4">
-
+      <div className="border-t border-ink/5 p-3 sm:p-4 bg-ivory/60 safe-pb">
         <div className="flex items-center gap-2">
-
           <input
             type="text"
             value={message}
-            onChange={(e) =>
-              setMessage(e.target.value)
-            }
-            onKeyDown={(e) =>
-              e.key === "Enter" && handleSend()
-            }
+            onChange={(e) => setMessage(e.target.value)}
+            onKeyDown={(e) => e.key === "Enter" && handleSend()}
             placeholder={
-              selectedPalm
-                ? "Ask about this palm..."
-                : "Select a palm first..."
+              selectedPalm ? "Ask about this palm..." : "Ask freely..."
             }
-            className="flex-1 border border-gray-300 rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-purple-500"
+            className="flex-1 min-w-0 border border-ink/10 rounded-2xl px-3 sm:px-4 py-2.5 sm:py-3 outline-none focus:ring-4 focus:ring-gold/15 focus:border-gold bg-white transition text-sm sm:text-[15px] font-light"
           />
-
           <button
+            type="button"
             onClick={handleSend}
-            disabled={!conversationId}
-            className="h-12 w-12 rounded-xl bg-purple-600 hover:bg-purple-700 disabled:opacity-50 text-white flex items-center justify-center"
+            disabled={!conversationId || sending || !message.trim()}
+            className="h-11 w-11 sm:h-12 sm:w-12 shrink-0 rounded-2xl bg-night hover:bg-night-soft disabled:opacity-40 text-gold flex items-center justify-center transition"
+            aria-label="Send message"
           >
             <SendHorizontal size={18} />
           </button>
-
         </div>
-
       </div>
-
     </div>
   );
 }

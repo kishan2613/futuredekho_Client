@@ -1,40 +1,47 @@
+import { useEffect, useState } from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
 
-import Home from "./pages/Home";
+import Home from "./pages/home";
 import Login from "./pages/Login";
 import Signup from "./pages/signup";
 import Navbar from "./components/common/Navbar";
 import HomePage from "./pages/Landing";
 
 function App() {
-const isLoggedIn = !!localStorage.getItem("user_id");
+  const [isLoggedIn, setIsLoggedIn] = useState(
+    () => !!localStorage.getItem("user_id")
+  );
 
-return (
-<> <Navbar />
+  useEffect(() => {
+    const syncAuth = () => {
+      setIsLoggedIn(!!localStorage.getItem("user_id"));
+    };
 
+    window.addEventListener("storage", syncAuth);
+    window.addEventListener("auth-changed", syncAuth);
 
-  <Routes>
-    <Route path="/" element={<HomePage />} />
+    return () => {
+      window.removeEventListener("storage", syncAuth);
+      window.removeEventListener("auth-changed", syncAuth);
+    };
+  }, []);
 
-    <Route
-      path="/palmistry"
-      element={
-        isLoggedIn ? (
-          <Home />
-        ) : (
-          <Navigate to="/login" replace />
-        )
-      }
-    />
-
-    <Route path="/login" element={<Login />} />
-
-    <Route path="/register" element={<Signup />} />
-  </Routes>
-</>
-
-
-);
+  return (
+    <>
+      <Navbar />
+      <Routes>
+        <Route path="/" element={<HomePage />} />
+        <Route
+          path="/palmistry"
+          element={
+            isLoggedIn ? <Home /> : <Navigate to="/login" replace />
+          }
+        />
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Signup />} />
+      </Routes>
+    </>
+  );
 }
 
 export default App;
