@@ -6,6 +6,7 @@ import Login from "./pages/Login";
 import Signup from "./pages/signup";
 import Navbar from "./components/common/Navbar";
 import HomePage from "./pages/Landing";
+import Compatibility from "./pages/Compatibility";
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(
@@ -31,6 +32,7 @@ function App() {
       <Navbar />
       <Routes>
         <Route path="/" element={<HomePage />} />
+        <Route path="/compatibility" element={<Compatibility />} />
         <Route
           path="/palmistry"
           element={

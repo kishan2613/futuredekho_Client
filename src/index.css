@@ -104,6 +104,14 @@
       radial-gradient(1px 1px at 85% 60%, rgba(255, 255, 255, 0.25), transparent),
       radial-gradient(1px 1px at 10% 80%, rgba(232, 163, 23, 0.3), transparent);
   }
+
+  .bg-atmosphere {
+    background:
+      radial-gradient(ellipse 80% 60% at 10% 20%, rgba(232, 163, 23, 0.12), transparent 55%),
+      radial-gradient(ellipse 70% 50% at 90% 10%, rgba(244, 114, 182, 0.08), transparent 50%),
+      radial-gradient(ellipse 60% 40% at 50% 100%, rgba(255, 241, 224, 0.9), transparent 60%),
+      var(--color-ivory);
+  }
 }
 
 /* ─── Keyframes ─── */

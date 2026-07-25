@@ -51,6 +51,9 @@ function Navbar() {
           <Link to="/" className={linkClass}>
             Home
           </Link>
+          <Link to="/compatibility" className={linkClass}>
+            Compatibility
+          </Link>
           <Link to="/palmistry" className={linkClass}>
             Palm Reading
           </Link>
@@ -115,6 +118,7 @@ function Navbar() {
         <div className="md:hidden border-t border-ink/5 bg-ivory px-6 py-5 space-y-1 animate-fade-in">
           {[
             { to: "/", label: "Home" },
+            { to: "/compatibility", label: "Compatibility" },
             { to: "/palmistry", label: "Palm Reading" },
           ].map((item) => (
             <Link

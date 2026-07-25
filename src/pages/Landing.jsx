@@ -128,12 +128,13 @@ function HomePage() {
                 Start Free Reading
                 <ArrowRight size={18} />
               </Link>
-              <a
-                href="#zodiac"
-                className="btn-ghost inline-flex items-center justify-center px-7 sm:px-8 py-3.5 sm:py-4 rounded-2xl text-sm sm:text-[15px] font-medium text-ink"
+              <Link
+                to="/compatibility"
+                className="btn-ghost inline-flex items-center justify-center gap-2 px-7 sm:px-8 py-3.5 sm:py-4 rounded-2xl text-sm sm:text-[15px] font-medium text-ink"
               >
-                Explore Astrology
-              </a>
+                <Heart size={16} className="text-gold-deep" />
+                Compatibility Match
+              </Link>
             </div>
 
             <div className="animate-fade-up delay-5 mt-10 sm:mt-12 flex items-center gap-3 text-xs sm:text-sm text-muted">
@@ -348,6 +349,36 @@ function HomePage() {
               </Reveal>
             ))}
           </div>
+        </div>
+      </section>
+
+      {/* COMPATIBILITY TEASER */}
+      <section className="relative py-24 lg:py-32 overflow-hidden bg-night text-white">
+        <div className="absolute inset-0 star-field opacity-70 pointer-events-none" />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[28rem] h-[28rem] rounded-full bg-gold/10 blur-3xl animate-pulse-soft pointer-events-none" />
+
+        <div className="relative max-w-4xl mx-auto px-6 text-center">
+          <Reveal>
+            <p className="font-brand text-[11px] tracking-[0.4em] uppercase text-gold">
+              Love & destiny
+            </p>
+            <h2 className="mt-4 font-display text-4xl sm:text-5xl lg:text-6xl font-semibold text-balance">
+              Check your{" "}
+              <span className="italic text-gold-shine">compatibility</span>
+            </h2>
+            <p className="mt-5 text-white/55 text-lg font-light max-w-xl mx-auto leading-relaxed">
+              Enter two names and discover love scores, chemistry, marriage
+              potential, and the cosmic story of your bond.
+            </p>
+            <Link
+              to="/compatibility"
+              className="btn-gold mt-10 inline-flex items-center gap-2.5 px-8 py-4 rounded-2xl"
+            >
+              <Heart size={18} />
+              Try Name Match
+              <ArrowRight size={18} />
+            </Link>
+          </Reveal>
         </div>
       </section>
 
