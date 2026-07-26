@@ -11,7 +11,7 @@ function Home() {
 
   return (
     <div className="min-h-[calc(100svh-4rem)] sm:min-h-[calc(100svh-4.75rem)] bg-gradient-to-br from-ivory via-blush/40 to-ivory p-2 sm:p-3 md:p-4 lg:p-5">
-      <div className="max-w-[1600px] mx-auto mb-3 sm:mb-4 px-1">
+      {/* <div className="max-w-[1600px] mx-auto mb-3 sm:mb-4 px-1">
         <h1 className="font-display text-xl sm:text-2xl font-semibold text-ink truncate">
           {userName ? (
             <>
@@ -25,7 +25,7 @@ function Home() {
         <p className="text-xs sm:text-sm text-muted font-light mt-0.5">
           Upload a palm and chat with your AI reader
         </p>
-      </div>
+      </div> */}
 
       {/* Mobile tab switcher */}
       <div className="lg:hidden flex gap-2 mb-3 p-1 rounded-2xl bg-white/80 border border-gold/15 max-w-[1600px] mx-auto">
