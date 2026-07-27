@@ -54,6 +54,12 @@ function Navbar() {
           <Link to="/compatibility" className={linkClass}>
             Compatibility
           </Link>
+          <Link to="/lucky-name" className={linkClass}>
+            Lucky Name
+          </Link>
+          <Link to="/kundali" className={linkClass}>
+            Kundali
+          </Link>
           <Link to="/palmistry" className={linkClass}>
             Palm Reading
           </Link>
@@ -119,6 +125,8 @@ function Navbar() {
           {[
             { to: "/", label: "Home" },
             { to: "/compatibility", label: "Compatibility" },
+            { to: "/lucky-name", label: "Lucky Name" },
+            { to: "/kundali", label: "Kundali" },
             { to: "/palmistry", label: "Palm Reading" },
           ].map((item) => (
             <Link

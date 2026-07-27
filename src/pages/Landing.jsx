@@ -352,33 +352,90 @@ function HomePage() {
         </div>
       </section>
 
-      {/* COMPATIBILITY TEASER */}
+      {/* LUCKY NAME + COMPATIBILITY */}
       <section className="relative py-24 lg:py-32 overflow-hidden bg-night text-white">
         <div className="absolute inset-0 star-field opacity-70 pointer-events-none" />
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[28rem] h-[28rem] rounded-full bg-gold/10 blur-3xl animate-pulse-soft pointer-events-none" />
 
-        <div className="relative max-w-4xl mx-auto px-6 text-center">
+        <div className="relative max-w-5xl mx-auto px-6">
           <Reveal>
-            <p className="font-brand text-[11px] tracking-[0.4em] uppercase text-gold">
-              Love & destiny
-            </p>
-            <h2 className="mt-4 font-display text-4xl sm:text-5xl lg:text-6xl font-semibold text-balance">
-              Check your{" "}
-              <span className="italic text-gold-shine">compatibility</span>
-            </h2>
-            <p className="mt-5 text-white/55 text-lg font-light max-w-xl mx-auto leading-relaxed">
-              Enter two names and discover love scores, chemistry, marriage
-              potential, and the cosmic story of your bond.
-            </p>
-            <Link
-              to="/compatibility"
-              className="btn-gold mt-10 inline-flex items-center gap-2.5 px-8 py-4 rounded-2xl"
-            >
-              <Heart size={18} />
-              Try Name Match
-              <ArrowRight size={18} />
-            </Link>
+            <div className="text-center max-w-2xl mx-auto">
+              <p className="font-brand text-[11px] tracking-[0.4em] uppercase text-gold">
+                Name destiny tools
+              </p>
+              <h2 className="mt-4 font-display text-4xl sm:text-5xl lg:text-6xl font-semibold text-balance">
+                Unlock fortune in{" "}
+                <span className="italic text-gold-shine">your name</span>
+              </h2>
+              <p className="mt-5 text-white/55 text-lg font-light leading-relaxed">
+                Score your name&apos;s energy — or match two names for cosmic
+                compatibility.
+              </p>
+            </div>
           </Reveal>
+
+          <div className="mt-12 grid sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+            <Reveal delay={0.08}>
+              <Link
+                to="/kundali"
+                className="group block rounded-[1.5rem] border border-white/10 bg-white/[0.04] hover:bg-gold/10 hover:border-gold/30 p-6 sm:p-8 transition"
+              >
+                <p className="font-brand text-[10px] tracking-[0.3em] uppercase text-gold">
+                  Vedic
+                </p>
+                <h3 className="mt-3 font-display text-2xl font-semibold">
+                  Kundali & Horoscope
+                </h3>
+                <p className="mt-2 text-white/55 font-light text-sm leading-relaxed">
+                  Birth chart, planetary positions, nakshatra & daily Vedic
+                  forecast.
+                </p>
+                <span className="mt-5 inline-flex items-center gap-2 text-gold-soft text-sm font-medium group-hover:gap-3 transition-all">
+                  Generate chart <ArrowRight size={16} />
+                </span>
+              </Link>
+            </Reveal>
+            <Reveal delay={0.12}>
+              <Link
+                to="/lucky-name"
+                className="group block rounded-[1.5rem] border border-white/10 bg-white/[0.04] hover:bg-gold/10 hover:border-gold/30 p-6 sm:p-8 transition"
+              >
+                <p className="font-brand text-[10px] tracking-[0.3em] uppercase text-gold">
+                  New
+                </p>
+                <h3 className="mt-3 font-display text-2xl font-semibold">
+                  Lucky Name Score
+                </h3>
+                <p className="mt-2 text-white/55 font-light text-sm leading-relaxed">
+                  Personality, careers, lucky numbers, colors & AI advice —
+                  unique to your name.
+                </p>
+                <span className="mt-5 inline-flex items-center gap-2 text-gold-soft text-sm font-medium group-hover:gap-3 transition-all">
+                  Reveal your score <ArrowRight size={16} />
+                </span>
+              </Link>
+            </Reveal>
+            <Reveal delay={0.16}>
+              <Link
+                to="/compatibility"
+                className="group block rounded-[1.5rem] border border-white/10 bg-white/[0.04] hover:bg-gold/10 hover:border-gold/30 p-6 sm:p-8 transition sm:col-span-2 lg:col-span-1"
+              >
+                <p className="font-brand text-[10px] tracking-[0.3em] uppercase text-gold">
+                  Match
+                </p>
+                <h3 className="mt-3 font-display text-2xl font-semibold">
+                  Compatibility Match
+                </h3>
+                <p className="mt-2 text-white/55 font-light text-sm leading-relaxed">
+                  Enter two names and discover love, trust, chemistry & your
+                  bond type.
+                </p>
+                <span className="mt-5 inline-flex items-center gap-2 text-gold-soft text-sm font-medium group-hover:gap-3 transition-all">
+                  <Heart size={16} /> Try name match
+                </span>
+              </Link>
+            </Reveal>
+          </div>
         </div>
       </section>
 

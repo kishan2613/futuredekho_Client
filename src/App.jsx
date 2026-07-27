@@ -7,6 +7,8 @@ import Signup from "./pages/signup";
 import Navbar from "./components/common/Navbar";
 import HomePage from "./pages/Landing";
 import Compatibility from "./pages/Compatibility";
+import LuckyName from "./pages/LuckyName";
+import Kundali from "./pages/Kundali";
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(
@@ -33,6 +35,8 @@ function App() {
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/compatibility" element={<Compatibility />} />
+        <Route path="/lucky-name" element={<LuckyName />} />
+        <Route path="/kundali" element={<Kundali />} />
         <Route
           path="/palmistry"
           element={
