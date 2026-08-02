@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Hand, ImagePlus, Loader2, MessageSquare } from "lucide-react";
-import axios from "axios";
+import api from "../services/backendapis";
 
 function UploadWorkspace({
   selectedPalm,
@@ -21,9 +21,7 @@ function UploadWorkspace({
   const fetchPalms = async () => {
     try {
       const userId = localStorage.getItem("user_id");
-      const res = await axios.get(
-        `https://futuredekho-server.onrender.com/palm/user/${userId}`
-      );
+      const res = await api.get(`/palm/user/${userId}`);
       setPalms(res.data.palms || []);
     } catch (error) {
       console.error("Failed to fetch palms:", error);
@@ -33,9 +31,7 @@ function UploadWorkspace({
   const fetchConversations = async () => {
     try {
       const userId = localStorage.getItem("user_id");
-      const res = await axios.get(
-        `https://futuredekho-server.onrender.com/chat/user/${userId}`
-      );
+      const res = await api.get(`/chat/user/${userId}`);
       setConversations(res.data.conversations || []);
     } catch (error) {
       console.error(error);
@@ -50,11 +46,15 @@ function UploadWorkspace({
       const formData = new FormData();
       formData.append("image", selectedFile);
 
-      const res = await axios.post(
-        `https://futuredekho-server.onrender.com/palm/analyze?user_id=${userId}`,
-        formData,
-        { headers: { "Content-Type": "multipart/form-data" } }
-      );
+      const res = await api.post(
+  `/palm/analyze?user_id=${userId}`,
+  formData,
+  {
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+  }
+);
 
       setSelectedFile(null);
       await fetchPalms();

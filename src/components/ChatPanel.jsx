@@ -3,7 +3,7 @@ import { Hand, Paperclip, SendHorizontal, X } from "lucide-react";
 import { sendMessage } from "../services/chatservice";
 import { createConversation } from "../services/conversationService";
 import ReactMarkdown from "react-markdown";
-import axios from "axios";
+import api from "../services/backendApis";
 
 function ChatPanel({ selectedPalm, setSelectedPalm, selectedConversation }) {
   const [message, setMessage] = useState("");
@@ -40,9 +40,7 @@ function ChatPanel({ selectedPalm, setSelectedPalm, selectedConversation }) {
 
   const loadConversation = async () => {
     try {
-      const res = await axios.get(
-        `https://futuredekho-server.onrender.com/chat/${selectedConversation.id}`
-      );
+      const res = await api.get(`/chat/${selectedConversation.id}`);
       setMessages(res.data.messages || []);
       setConversationId(selectedConversation.id);
     } catch (error) {
