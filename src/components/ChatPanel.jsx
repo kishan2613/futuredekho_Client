@@ -3,7 +3,7 @@ import { Hand, Paperclip, SendHorizontal, X } from "lucide-react";
 import { sendMessage } from "../services/chatservice";
 import { createConversation } from "../services/conversationService";
 import ReactMarkdown from "react-markdown";
-import api from "../services/backendApis";
+import api from "../services/backendapis";
 
 function ChatPanel({ selectedPalm, setSelectedPalm, selectedConversation }) {
   const [message, setMessage] = useState("");
