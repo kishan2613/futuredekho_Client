@@ -37,7 +37,7 @@ function App() {
         <Route path="/" element={<HomePage />} />
         <Route path="/compatibility" element={<Compatibility />} />
         <Route path="/lucky-name" element={<LuckyBabyNames />} />
-        <Route path="/kundali" element={<Kundali />} />
+        {/* <Route path="/kundali" element={<Kundali />} /> */}
         <Route path="/horoscope" element={<DailyHoroscope />} />
         <Route
           path="/palmistry"
