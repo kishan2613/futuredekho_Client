@@ -129,7 +129,7 @@ function Navbar() {
             { to: "/", label: "Home" },
             { to: "/compatibility", label: "Compatibility" },
             { to: "/lucky-name", label: "Lucky Name" },
-            { to: "/kundali", label: "Kundali" },
+            { to: "/horoscope", label: "horoscope" },
             { to: "/palmistry", label: "Palm Reading" },
           ].map((item) => (
             <Link
@@ -141,13 +141,13 @@ function Navbar() {
               {item.label}
             </Link>
           ))}
-          <a
+          {/* <a
             href="/#zodiac"
             onClick={() => setOpen(false)}
             className="block py-3 font-medium text-ink"
           >
             Zodiac
-          </a>
+          </a> */}
           <div className="pt-3 flex flex-col gap-2 border-t border-ink/5">
             {token ? (
               <>
