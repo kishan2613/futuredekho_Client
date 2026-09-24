@@ -117,6 +117,7 @@ function Compatibility() {
 
     try {
       const res = await checkNameCompatibility(name1, name2);
+      console.log(res);
       if (!res?.success || !res?.data) {
         throw new Error("Could not calculate compatibility");
       }

@@ -57,15 +57,18 @@ function Navbar() {
           <Link to="/lucky-name" className={linkClass}>
             Lucky Name
           </Link>
-          <Link to="/kundali" className={linkClass}>
+          {/* <Link to="/kundali" className={linkClass}>
             Kundali
+          </Link> */}
+          <Link to="/horoscope" className={linkClass}>
+            horoscrope
           </Link>
           <Link to="/palmistry" className={linkClass}>
             Palm Reading
           </Link>
-          <a href="/#zodiac" className={linkClass}>
+          {/* <a href="/#zodiac" className={linkClass}>
             Zodiac
-          </a>
+          </a> */}
           <a href="/#about" className={linkClass}>
             About
           </a>

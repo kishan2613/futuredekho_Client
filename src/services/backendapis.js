@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const api = axios.create({
-  baseURL: "https://futuredekho-server.onrender.com", // change when deployed
+  baseURL: "http://localhost:8000", // change when deployed
 });
 
 export default api;

@@ -13,43 +13,68 @@ export default function Signup() {
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState("");
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setError("");
+ const handleSubmit = async (e) => {
+  e.preventDefault();
+  setError("");
 
-    try {
-      setLoading(true);
-      const data = await registerUser(form);
+  try {
+    setLoading(true);
 
-      if (data?.access_token) {
-        localStorage.setItem("token", data.access_token);
-      }
-      if (data?.user_id != null) {
-        localStorage.setItem("user_id", String(data.user_id));
-      }
+    const data = await registerUser(form);
 
-      const userName = (data.name || form.name || "").trim();
-      if (userName) {
-        localStorage.setItem("user_name", userName);
-      }
+    console.log("SIGNUP RESPONSE:", data);
 
-      window.dispatchEvent(new Event("auth-changed"));
-      setSuccess(true);
-
-      setTimeout(() => {
-        navigate(data?.user_id ? "/palmistry" : "/login", { replace: true });
-      }, 1200);
-    } catch (err) {
-      console.error(err);
-      const message =
-        err?.response?.data?.detail ||
-        err?.response?.data?.message ||
-        "Registration failed. Please try again.";
-      setError(typeof message === "string" ? message : "Registration failed");
-    } finally {
-      setLoading(false);
+    if (!data?.access_token) {
+      setError("Registration failed. Please try again.");
+      return;
     }
-  };
+
+    // Same auth storage as Login
+    localStorage.setItem("token", data.access_token);
+
+    if (data?.user_id != null) {
+      localStorage.setItem("user_id", String(data.user_id));
+    }
+
+    // Use API name first, fallback to form name
+    const userName = (data?.name || form.name || "").trim();
+
+    if (userName) {
+      localStorage.setItem("user_name", userName);
+    }
+
+    // IMPORTANT:
+    // If backend returns complete user object, save it
+    if (data?.user) {
+      localStorage.setItem("user", JSON.stringify(data.user));
+    }
+
+    // Tell Navbar / Auth components
+    window.dispatchEvent(new Event("auth-changed"));
+
+    setSuccess(true);
+
+    setTimeout(() => {
+      navigate("/", { replace: true });
+    }, 1200);
+
+  } catch (err) {
+    console.error("SIGNUP ERROR:", err);
+
+    const message =
+      err?.response?.data?.detail ||
+      err?.response?.data?.message ||
+      "Registration failed. Please try again.";
+
+    setError(
+      typeof message === "string"
+        ? message
+        : "Registration failed"
+    );
+  } finally {
+    setLoading(false);
+  }
+};
 
   const inputClass =
     "w-full px-5 py-3.5 rounded-2xl border border-ink/10 bg-ivory/80 focus:border-gold focus:ring-4 focus:ring-gold/15 outline-none transition font-light";

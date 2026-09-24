@@ -9,16 +9,17 @@ import HomePage from "./pages/Landing";
 import Compatibility from "./pages/Compatibility";
 import LuckyName from "./pages/LuckyName";
 import Kundali from "./pages/Kundali";
+import DailyHoroscope from "./pages/Horoscope";
+import LuckyBabyNames from "./pages/LuckyBabyNames";
 
 function App() {
-  const [isLoggedIn, setIsLoggedIn] = useState(
-    () => !!localStorage.getItem("user_id")
-  );
-
+ const [isLoggedIn, setIsLoggedIn] = useState(
+  () => !!localStorage.getItem("token")
+);
   useEffect(() => {
     const syncAuth = () => {
-      setIsLoggedIn(!!localStorage.getItem("user_id"));
-    };
+  setIsLoggedIn(!!localStorage.getItem("token"));
+};
 
     window.addEventListener("storage", syncAuth);
     window.addEventListener("auth-changed", syncAuth);
@@ -35,8 +36,9 @@ function App() {
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/compatibility" element={<Compatibility />} />
-        <Route path="/lucky-name" element={<LuckyName />} />
+        <Route path="/lucky-name" element={<LuckyBabyNames />} />
         <Route path="/kundali" element={<Kundali />} />
+        <Route path="/horoscope" element={<DailyHoroscope />} />
         <Route
           path="/palmistry"
           element={
