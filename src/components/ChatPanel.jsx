@@ -34,9 +34,20 @@ function ChatPanel({ selectedPalm, setSelectedPalm, selectedConversation }) {
     loadConversation();
   }, [selectedConversation]);
 
-  useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages]);
+ useEffect(() => {
+  const container = messagesEndRef.current?.parentElement;
+
+  if (!container) return;
+
+  const isNearBottom =
+    container.scrollHeight - container.scrollTop - container.clientHeight < 100;
+
+  if (isNearBottom) {
+    messagesEndRef.current?.scrollIntoView({
+      behavior: "smooth",
+    });
+  }
+}, [messages]);
 
   const loadConversation = async () => {
     try {
@@ -49,51 +60,85 @@ function ChatPanel({ selectedPalm, setSelectedPalm, selectedConversation }) {
   };
 
   const handleSend = async () => {
-    if (!message.trim() || sending) return;
-    if (!conversationId) {
-      alert("Conversation not ready");
-      return;
-    }
+  if (!message.trim() || sending) return;
 
-    const currentMessage = message;
-    setMessage("");
-    setSending(true);
+  if (!conversationId) {
+    alert("Conversation not ready");
+    return;
+  }
 
-    setMessages((prev) => [
-      ...prev,
-      { role: "user", content: currentMessage },
-      { id: "loading", role: "assistant", loading: true },
-    ]);
+  const currentMessage = message;
+  const assistantId = `assistant-${Date.now()}`;
 
-    try {
-      const res = await sendMessage(
-        conversationId,
-        currentMessage,
-        selectedPalm?.id || null
-      );
+  setMessage("");
+  setSending(true);
+
+  setMessages((prev) => [
+    ...prev,
+    { role: "user", content: currentMessage },
+    { id: "loading", role: "assistant", loading: true },
+  ]);
+
+  try {
+    const res = await sendMessage(
+      conversationId,
+      currentMessage,
+      selectedPalm?.id || null
+    );
+
+    const reply = res.reply || "";
+
+    // Replace loading indicator with empty assistant message
+    setMessages((prev) =>
+      prev.map((msg) =>
+        msg.id === "loading"
+          ? {
+              id: assistantId,
+              role: "assistant",
+              content: "",
+            }
+          : msg
+      )
+    );
+
+    // Word-by-word animation
+    const words = reply.split(" ");
+    let currentText = "";
+
+    for (let i = 0; i < words.length; i++) {
+      currentText += (i === 0 ? "" : " ") + words[i];
+
       setMessages((prev) =>
         prev.map((msg) =>
-          msg.id === "loading"
-            ? { role: "assistant", content: res.reply }
-            : msg
-        )
-      );
-    } catch (error) {
-      console.error(error);
-      setMessages((prev) =>
-        prev.map((msg) =>
-          msg.id === "loading"
+          msg.id === assistantId
             ? {
-                role: "assistant",
-                content: "Something went wrong. Please try again.",
+                ...msg,
+                content: currentText,
               }
             : msg
         )
       );
-    } finally {
-      setSending(false);
+
+      await new Promise((resolve) => setTimeout(resolve, 20));
     }
-  };
+  } catch (error) {
+    console.error(error);
+
+    setMessages((prev) =>
+      prev.map((msg) =>
+        msg.id === "loading"
+          ? {
+              id: `error-${Date.now()}`,
+              role: "assistant",
+              content: "Something went wrong. Please try again.",
+            }
+          : msg
+      )
+    );
+  } finally {
+    setSending(false);
+  }
+};
 
   return (
     <div className="flex-1 w-full h-full min-h-0 bg-white/90 backdrop-blur-xl rounded-2xl sm:rounded-3xl border border-gold/15 shadow-[0_20px_60px_-28px_rgba(10,15,28,0.35)] flex flex-col overflow-hidden">
